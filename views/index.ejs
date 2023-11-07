@@ -9,14 +9,14 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
-    <% pictures.forEach(function(picture){ %>
-      <div class="text-center">
-        <img class="mb-3" src="/<%=picture%>" style="width:50%">
-        <h4>
-          <%=picture%>
-        </h4>
-      </div>
-    <% }); %>
+<% pictures.forEach(function(picture){ %>
+    <div class="text-center">
+        <a href="/pictures/<%= picture %>">
+            <img class="mb-3" src="/pictures/<%= picture %>" style="width:50%">
+        </a>
+        <h4><%= picture %></h4>
+    </div>
+<% }); %>
       <script src="../javascripts/pictures.js"></script>
   </body>
 </html>
