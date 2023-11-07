@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-<% pictures.forEach(function(picture){ %>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+  <% pictures.forEach(function(picture){ %>
     <div class="text-center">
-        <a href="/pictures/<%= picture %>">
-            <img class="mb-3" src="/pictures/<%= picture %>" style="width:50%">
-        </a>
-        <h4><%= picture %></h4>
+      <img class="mb-3" src="data:image/png; base64, <%=picture.src%>" style="width:500px">
+      <h4>
+        <%=picture.name%>
+      </h4>
     </div>
-<% }); %>
-      <script src="../javascripts/pictures.js"></script>
-  </body>
+    <% });%>
+</body>
+
 </html>

@@ -13,14 +13,12 @@
     </div>
 <% pictures.forEach(function(picture){ %>
     <div class="text-center">
-        <a href="/pictures/<%= picture %>">
-            <img class="mb-3" src="/pictures/<%= picture %>" style="width:50%">
-        </a>
+        <img class="mb-3" src="data:image/png; base64, <%=picture.src%>" style="width:500px">
         <h4>
-            <%= picture %>
+            <%=picture.name%>
         </h4>
     </div>
-    <% }); %>
+    <% });%>
     <script src="../javascripts/pictures.js"></script>
 </body>
 
