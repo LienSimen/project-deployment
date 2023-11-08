@@ -1,11 +1,9 @@
 var express = require("express");
 var router = express.Router();
-const fs = require("fs");
-var path = require("path");
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 const { requiresAuth } = require("express-openid-connect");
-
+// Or
 /* GET pictures listing. */
 router.get("/", requiresAuth(), async function (req, res, next) {
   var params = {
@@ -32,9 +30,24 @@ router.get("/", requiresAuth(), async function (req, res, next) {
   res.render("pictures", { pictures: pictures });
 });
 
+router.get("/:pictureName", requiresAuth(), async function (req, res, next) {
+  let my_file = await s3
+    .getObject({
+      Bucket: process.env.CYCLIC_BUCKET_NAME,
+      Key: "public/" + req.params.pictureName,
+    })
+    .promise();
+  const picture = {
+    src: Buffer.from(my_file.Body).toString("base64"),
+    name: req.params.pictureName,
+  };
+  res.render("pictureDetails", { picture: picture });
+});
+
 router.post("/", requiresAuth(), async function (req, res, next) {
   const file = req.files.file;
   console.log(req.files);
+  console.log(req.oidc.user);
   await s3
     .putObject({
       Body: file.data,
@@ -43,35 +56,6 @@ router.post("/", requiresAuth(), async function (req, res, next) {
     })
     .promise();
   res.end();
-});
-
-
-// New GET route for displaying a specific picture by name
-router.get("/:pictureName", requiresAuth(), async function (req, res, next) {
-  const pictureName = req.params.pictureName;
-
-  try {
-    // Fetch the object from S3
-    const data = await s3
-      .getObject({
-        Bucket: process.env.CYCLIC_BUCKET_NAME,
-        Key: `public/${pictureName}`,
-      })
-      .promise();
-
-    // Determine content type for setting the correct Content-Type header
-    const contentType =
-      path.extname(pictureName) === ".png" ? "image/png" : "image/jpeg";
-
-    // Set the appropriate content type for the response
-    res.setHeader("Content-Type", contentType);
-
-    // Send the image data
-    res.send(data.Body);
-  } catch (err) {
-    console.error(err);
-    res.status(404).send("Picture not found");
-  }
 });
 
 module.exports = router;
