@@ -5,7 +5,7 @@ const s3 = new AWS.S3();
 const { requiresAuth } = require("express-openid-connect");
 
 /* GET home page. */
-router.get("/", async function (req, res, next) {
+router.get("/", requiresAuth(), async function (req, res, next) {
   var params = {
     Bucket: process.env.CYCLIC_BUCKET_NAME,
     Delimiter: "/",
@@ -29,7 +29,8 @@ router.get("/", async function (req, res, next) {
   );
   res.render("index", {
     pictures: pictures,
-    title: "Express"
+    title: "Express",
+    isAuthenticated: req.oidc.isAuthenticated(),
   });
 });
 
