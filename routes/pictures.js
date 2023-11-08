@@ -47,20 +47,31 @@ router.post("/", async function (req, res, next) {
 
 
 // New GET route for displaying a specific picture by name
-router.get("/:pictureName", function (req, res, next) {
-  var pictureName = req.params.pictureName;
-  var picturePath = path.join(__dirname, "../pictures", pictureName);
+router.get("/:pictureName", requiresAuth(), async function (req, res, next) {
+  const pictureName = req.params.pictureName;
 
-  // Check if the file exists in the directory
-  fs.access(picturePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      // Handle file not existing
-      console.error(err);
-      return res.status(404).send("Picture not found");
-    }
-    // If the file exists, send it to the client
-    res.sendFile(picturePath);
-  });
+  try {
+    // Fetch the object from S3
+    const data = await s3
+      .getObject({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Key: `public/${pictureName}`,
+      })
+      .promise();
+
+    // Determine content type for setting the correct Content-Type header
+    const contentType =
+      path.extname(pictureName) === ".png" ? "image/png" : "image/jpeg";
+
+    // Set the appropriate content type for the response
+    res.setHeader("Content-Type", contentType);
+
+    // Send the image data
+    res.send(data.Body);
+  } catch (err) {
+    console.error(err);
+    res.status(404).send("Picture not found");
+  }
 });
 
 module.exports = router;
