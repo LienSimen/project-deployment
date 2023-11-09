@@ -11,6 +11,7 @@ var picturesRouter = require("./routes/pictures");
 
 var app = express();
 const fileUpload = require("express-fileupload");
+const { SsmSap } = require("aws-sdk");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
