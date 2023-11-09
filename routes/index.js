@@ -27,6 +27,8 @@ router.get("/", async function (req, res, next) {
         };
       })
     );
+    
+    
     res.render("index", {
       pictures: pictures,
       title: "Express",
