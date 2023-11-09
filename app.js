@@ -9,6 +9,7 @@ const { auth } = require("express-openid-connect");
 var indexRouter = require("./routes/index");
 var picturesRouter = require("./routes/pictures");
 
+
 var app = express();
 const fileUpload = require("express-fileupload");
 const { SsmSap } = require("aws-sdk");
